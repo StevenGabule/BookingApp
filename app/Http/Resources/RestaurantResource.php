@@ -13,7 +13,9 @@ class RestaurantResource extends JsonResource
             'name' => $this->name,
             'short_description' => $this->short_description,
             'long_description' => $this->long_description,
-            'avatar' => $this->avatar,
+            'avatar' => $this->photo_url,
+            'image' => $this->avatar,
+            'category' => $this->category,
             'created_at_dates' => [
                 'created_at_human' => $this->created_at->diffForHumans(),
                 'created_at' => $this->created_at

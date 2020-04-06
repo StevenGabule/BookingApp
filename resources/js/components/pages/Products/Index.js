@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useRef} from 'react';
 import axios from 'axios';
 import BootstrapTable from 'react-bootstrap-table-next'
 import paginationFactory from 'react-bootstrap-table2-paginator';
@@ -8,31 +8,17 @@ import {Link} from "react-router-dom";
 const {SearchBar, ClearSearchButton} = Search;
 const {ExportCSVButton} = CSVExport;
 
-function ActionBtn(id) {
-    return (
-        <div className='btn-group' role="group">
-            <Link to="/" className='btn btn-info btn-sm text-white'>Edit</Link>
-            <Link to="/" className='btn btn-danger btn-sm'>Delete</Link>
-        </div>
-    )
-}
-
- function AvatarRes (val) {
-    return (
-        <img src={val} alt="" style={{width: '30px', height: '30px'}}/>
-    )
-}
-
 class Index extends Component {
-
     state = {
         products: [],
         columns: [
             {
                 dataField: 'avatar',
                 text: 'Avatar',
-                formatter: AvatarRes,
-                headerAttrs: { width: 50 },
+                formatter: (val) => (
+                    <img src={val} alt="" style={{width: '30px', height: '30px'}}/>
+                ),
+                headerAttrs: {width: 50},
                 attr: {
                     width: 50
                 }
@@ -49,14 +35,28 @@ class Index extends Component {
             {
                 dataField: 'id',
                 text: 'Actions',
-                formatter: ActionBtn,
+                formatter: (val) => (
+                    <div className="btn-group">
+                        <Link className="btn btn-info btn-sm text-white" to={`/restaurant/edit/${val}`}
+                              onClick={() => console.log(val)}>Edit</Link>
+                        <button className="btn btn-danger btn-sm" onClick={() => this.handleDelete(val)}>delete</button>
+                    </div>
+                )
             }
         ]
     };
 
-
+    handleDelete (id) {
+        const updatedRestaurant = this.state.products.filter(product => product.id !== id);
+        this.setState({ products: updatedRestaurant });
+        axios.delete(`http://127.0.0.1:8000/Api/restaurants/${id}`).then();
+    }
 
     componentDidMount() {
+       this.getRestaurants();
+    }
+
+    getRestaurants() {
         axios.get('http://127.0.0.1:8000/Api/restaurants').then((res) => {
             this.setState({
                 products: res.data.data
@@ -93,6 +93,7 @@ class Index extends Component {
                             <BootstrapTable
                                 {...props.baseProps}
                                 bootstrap4
+                                condensed
                                 striped
                                 hover
                                 pagination={paginationFactory()}

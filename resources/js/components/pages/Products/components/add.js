@@ -14,19 +14,19 @@ class Add extends Component {
         loading: false,
     };
 
-     handleSubmit = async (e) => {
+     handleSubmit = (e) => {
         e.preventDefault();
         this.setState({loading: true});
         const { name, short_description, long_description, category, avatar } = this.state;
-        await axios.post('http://127.0.0.1:8000/Api/restaurants', {
+        axios.post('http://127.0.0.1:8000/Api/restaurants', {
             name,
             short_description,
             long_description,
             category,
             avatar
-        }).then((res) => {
+        }).then((_) => {
             this.props.history.push('/restaurants');
-        }).catch((err) => console.table(err));
+        }).catch((err) => console.error(err));
         this.setState({loading: false})
     };
 
@@ -44,17 +44,18 @@ class Add extends Component {
             });
             return;
         }
-        this.uploadImage(files[0]);
         this.setState({
             imagePreviewUrl: true
         });
+        this.uploadImage(files[0]);
     };
 
     uploadImage = (file) => {
         let reader = new FileReader();
+        console.log(file);
         reader.onload = (e) => {
             this.setState({
-                avatar: e.target.result
+                avatar: reader.result
             });
         };
         reader.readAsDataURL(file);
@@ -67,7 +68,7 @@ class Add extends Component {
                 <div className="row">
                     <div className="col-lg-12">
                         <h1 className='h1 mt-3'>Register New Restaurant</h1>
-                        <form onSubmit={this.handleSubmit} encType="multipart/form-data">
+                        <form onSubmit={this.handleSubmit}>
                             <div className="form-group">
                                 <label htmlFor="inputName">Name</label>
                                 <input type="text" className="form-control" id="inputName" name='name'
@@ -87,11 +88,12 @@ class Add extends Component {
                             </div>
 
                             <div className="form-group">
-                                <label htmlFor="exampleFormControlFile1">Upload the avatar</label>
-                                <input type="file" className="form-control-file" name='avatar' onChange={this.onFileChange}
-                                       accept="image/x-png,image/gif,image/jpeg" id="exampleFormControlFile1"/>
+                                <label htmlFor="uploadLogo">Upload the avatar</label>
+                                <input type="file" className="form-control-file" onChange={this.onFileChange}
+                                       accept="image/x-png,image/gif,image/jpeg" id="uploadLogo"/>
                                 { imagePreviewUrl ?  (
-                                    <img className="img-fluid" alt="upload image not found" style={{width: '300px', height:'300px'}} src={avatar} />
+                                    <img className="img-fluid" alt="upload image not found"
+                                         style={{width: '300px', height:'300px'}} src={avatar} />
                                     ) : ( 'Upload image' )
                                 }
                             </div>

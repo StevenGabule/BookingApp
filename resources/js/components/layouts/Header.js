@@ -4,6 +4,7 @@ import Home from "../pages/Home";
 import About from "../pages/About";
 import RestaurantsIndex from "../pages/Products";
 import RestaurantAdd from "../pages/Products/components/add";
+import RestaurantEdit from "../pages/Products/components/edit";
 
 export default class Header extends Component {
     render() {
@@ -39,6 +40,7 @@ export default class Header extends Component {
                             <Route exact path='/about' component={About}/>
                             <Route exact path='/restaurants' component={RestaurantsIndex}/>
                             <Route exact path='/restaurant/new' component={RestaurantAdd}/>
+                            <Route exact path='/restaurant/edit/:id' component={RestaurantEdit}/>
                             {/*<Route exact path='/category' component={Categories}/>
                             <Route exact path='/category/add' component={Categories}/>
                             <Route exact path='/category/edit/:id' component={Categories}/>

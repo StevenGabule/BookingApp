@@ -21,3 +21,6 @@ Route::middleware('auth:sanctum')->get('/user', static function (Request $reques
 //Route::get('/products', 'ProductController@index');
 Route::get('/restaurants', 'RestaurantController@index');
 Route::post('/restaurants', 'RestaurantController@store');
+Route::get('/restaurant/edit/{id}', 'RestaurantController@edit');
+Route::post('/restaurant/update/{id}', 'RestaurantController@update');
+Route::delete('/restaurants/{id}', 'RestaurantController@destroy');
